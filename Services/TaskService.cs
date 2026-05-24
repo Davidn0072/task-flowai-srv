@@ -1,0 +1,68 @@
+using Microsoft.EntityFrameworkCore;
+using TaskFlowAISrv.Data;
+using TaskFlowAISrv.Models;
+
+namespace TaskFlowAISrv.Services;
+
+public interface ITaskService
+{
+    System.Threading.Tasks.Task<List<TaskItem>> GetAllAsync();
+    System.Threading.Tasks.Task<TaskItem?> GetByIdAsync(int id);
+    System.Threading.Tasks.Task<List<TaskItem>> GetByUserIdAsync(int userId);
+    System.Threading.Tasks.Task<TaskItem> CreateAsync(TaskItem task);
+    System.Threading.Tasks.Task<TaskItem> UpdateAsync(TaskItem task);
+    System.Threading.Tasks.Task DeleteAsync(int id);
+}
+
+public class TaskService : ITaskService
+{
+    private readonly ApplicationDbContext _context;
+
+    public TaskService(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+
+    public async System.Threading.Tasks.Task<List<TaskItem>> GetAllAsync()
+    {
+        return await _context.TaskItems.Include(t => t.User).ToListAsync();
+    }
+
+    public async System.Threading.Tasks.Task<TaskItem?> GetByIdAsync(int id)
+    {
+        return await _context.TaskItems.Include(t => t.User).FirstOrDefaultAsync(t => t.Id == id);
+    }
+
+    public async System.Threading.Tasks.Task<List<TaskItem>> GetByUserIdAsync(int userId)
+    {
+        return await _context.TaskItems
+            .Where(t => t.UserId == userId)
+            .Include(t => t.User)
+            .ToListAsync();
+    }
+
+    public async System.Threading.Tasks.Task<TaskItem> CreateAsync(TaskItem task)
+    {
+        task.CreatedAt = DateTime.UtcNow;
+        _context.TaskItems.Add(task);
+        await _context.SaveChangesAsync();
+        return task;
+    }
+
+    public async System.Threading.Tasks.Task<TaskItem> UpdateAsync(TaskItem task)
+    {
+        _context.TaskItems.Update(task);
+        await _context.SaveChangesAsync();
+        return task;
+    }
+
+    public async System.Threading.Tasks.Task DeleteAsync(int id)
+    {
+        var task = await _context.TaskItems.FindAsync(id);
+        if (task != null)
+        {
+            _context.TaskItems.Remove(task);
+            await _context.SaveChangesAsync();
+        }
+    }
+}

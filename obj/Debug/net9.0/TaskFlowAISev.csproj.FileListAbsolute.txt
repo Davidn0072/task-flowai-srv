@@ -286,3 +286,4 @@ C:\44\DEV\CS\Gen\MyProj\TaskFlowAI\TaskFlowAISrv\obj\Debug\net9.0\refint\TaskFlo
 C:\44\DEV\CS\Gen\MyProj\TaskFlowAI\TaskFlowAISrv\obj\Debug\net9.0\TaskFlowAISev.pdb
 C:\44\DEV\CS\Gen\MyProj\TaskFlowAI\TaskFlowAISrv\obj\Debug\net9.0\TaskFlowAISev.genruntimeconfig.cache
 C:\44\DEV\CS\Gen\MyProj\TaskFlowAI\TaskFlowAISrv\obj\Debug\net9.0\ref\TaskFlowAISev.dll
+C:\44\DEV\CS\Gen\MyProj\TaskFlowAI\TaskFlowAISrv\obj\Debug\net9.0\TaskFlowAISev.sourcelink.json
