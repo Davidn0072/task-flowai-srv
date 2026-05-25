@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using TaskFlowAISrv.Models;
 using TaskFlowAISrv.Services;
 
@@ -6,6 +7,7 @@ namespace TaskFlowAISrv.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;
@@ -30,6 +32,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<ActionResult<User>> Create(User user)
     {
         return CreatedAtAction(nameof(GetById), new { id = user.Id },

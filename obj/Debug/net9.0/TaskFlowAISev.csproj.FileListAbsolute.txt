@@ -287,3 +287,11 @@ C:\44\DEV\CS\Gen\MyProj\TaskFlowAI\TaskFlowAISrv\obj\Debug\net9.0\TaskFlowAISev.
 C:\44\DEV\CS\Gen\MyProj\TaskFlowAI\TaskFlowAISrv\obj\Debug\net9.0\TaskFlowAISev.genruntimeconfig.cache
 C:\44\DEV\CS\Gen\MyProj\TaskFlowAI\TaskFlowAISrv\obj\Debug\net9.0\ref\TaskFlowAISev.dll
 C:\44\DEV\CS\Gen\MyProj\TaskFlowAI\TaskFlowAISrv\obj\Debug\net9.0\TaskFlowAISev.sourcelink.json
+C:\44\DEV\CS\Gen\MyProj\TaskFlowAI\TaskFlowAISrv\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\44\DEV\CS\Gen\MyProj\TaskFlowAI\TaskFlowAISrv\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+C:\44\DEV\CS\Gen\MyProj\TaskFlowAI\TaskFlowAISrv\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\44\DEV\CS\Gen\MyProj\TaskFlowAI\TaskFlowAISrv\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+C:\44\DEV\CS\Gen\MyProj\TaskFlowAI\TaskFlowAISrv\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+C:\44\DEV\CS\Gen\MyProj\TaskFlowAI\TaskFlowAISrv\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\44\DEV\CS\Gen\MyProj\TaskFlowAI\TaskFlowAISrv\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+C:\44\DEV\CS\Gen\MyProj\TaskFlowAI\TaskFlowAISrv\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll

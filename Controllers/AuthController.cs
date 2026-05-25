@@ -23,16 +23,16 @@ public class AuthController : ControllerBase
             return BadRequest(new { message = "Email and password are required" });
         }
 
-        var user = await _userService.LoginAsync(request.Email, request.Password);
-        if (user == null)
+        var result = await _userService.LoginAsync(request.Email, request.Password);
+        if (result == null)
         {
             return Unauthorized(new { message = "Invalid email or password" });
         }
 
         return Ok(new
         {
-            user = new { id = user.Id, username = user.Username, email = user.Email },
-            token = "fake-jwt-token"
+            user = new { id = result.User.Id, username = result.User.Username, email = result.User.Email },
+            token = result.Token
         });
     }
 }
