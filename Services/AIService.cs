@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace TaskFlowAISrv.Services;
 
@@ -24,12 +25,12 @@ public class AIService : IAIService
     {
         try
         {
-            var vercelGatewayUrl = _configuration["VercelGateway:Url"];
             var apiKey = _configuration["VercelGateway:ApiKey"];
+            const string vercelGatewayUrl = "https://ai-gateway.vercel.sh/v1/chat/completions";
 
-            if (string.IsNullOrEmpty(vercelGatewayUrl) || string.IsNullOrEmpty(apiKey))
+            if (string.IsNullOrEmpty(apiKey))
             {
-                throw new Exception("VercelGateway configuration is missing");
+                throw new Exception("VercelGateway:ApiKey is missing in configuration");
             }
 
             var prompt = $@"You are a senior software engineering assistant.
@@ -38,7 +39,8 @@ Your task is to break down a given task into small, clear, actionable subtasks t
 
 Rules:
 - Output ONLY a JSON array of subtasks.
-- Each subtask must be a short actionable sentence.
+- Maximum 10 subtasks total.
+- Each subtask must be a short actionable sentence (max 75 characters).
 - Do not include explanations, headers, or extra text.
 - Do not repeat the original task.
 - Do not number the items.
@@ -61,16 +63,16 @@ Output format example:
 
             var request = new
             {
-                prompt = prompt,
-                model = "claude-3-5-sonnet-20241022",
-                max_tokens = 1024
+                model = "anthropic/claude-opus-4.7",
+                messages = new[]
+                {
+                    new { role = "user", content = prompt }
+                },
+                stream = false
             };
 
-            var content = new StringContent(
-                JsonSerializer.Serialize(request),
-                System.Text.Encoding.UTF8,
-                "application/json"
-            );
+            var jsonContent = JsonSerializer.Serialize(request);
+            var content = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, vercelGatewayUrl)
             {
@@ -79,7 +81,7 @@ Output format example:
 
             httpRequest.Headers.Add("Authorization", $"Bearer {apiKey}");
 
-            _logger.LogInformation("Sending request to Vercel Gateway for subtask generation");
+            _logger.LogInformation("Sending request to Vercel AI Gateway for subtask generation");
 
             var response = await _httpClient.SendAsync(httpRequest);
             response.EnsureSuccessStatusCode();
@@ -105,31 +107,24 @@ Output format example:
             {
                 var root = doc.RootElement;
 
-                // Try to find the content or text field
-                if (root.TryGetProperty("content", out var contentElement))
+                // OpenAI format: { choices: [{ message: { content: "..." } }] }
+                if (root.TryGetProperty("choices", out var choicesElement))
                 {
-                    if (contentElement.ValueKind == JsonValueKind.Array && contentElement.GetArrayLength() > 0)
+                    if (choicesElement.ValueKind == JsonValueKind.Array && choicesElement.GetArrayLength() > 0)
                     {
-                        var firstContent = contentElement[0];
-                        if (firstContent.TryGetProperty("text", out var textElement))
+                        var firstChoice = choicesElement[0];
+                        if (firstChoice.TryGetProperty("message", out var messageElement))
                         {
-                            return ParseJsonArray(textElement.GetString() ?? "");
+                            if (messageElement.TryGetProperty("content", out var contentElement))
+                            {
+                                var content = contentElement.GetString() ?? "";
+                                return ParseJsonArray(content);
+                            }
                         }
                     }
                 }
 
-                if (root.TryGetProperty("text", out var textElement2))
-                {
-                    return ParseJsonArray(textElement2.GetString() ?? "");
-                }
-
-                if (root.TryGetProperty("response", out var responseElement))
-                {
-                    return ParseJsonArray(responseElement.GetString() ?? "");
-                }
-
-                // Fallback: try to parse the entire response as JSON
-                return ParseJsonArray(response);
+                throw new Exception("Unexpected response format from Vercel Gateway");
             }
         }
         catch (Exception ex)
@@ -142,27 +137,41 @@ Output format example:
     {
         var result = new List<string>();
 
-        // Find JSON array in the text
-        var startIdx = jsonText.IndexOf('[');
-        var endIdx = jsonText.LastIndexOf(']');
-
-        if (startIdx >= 0 && endIdx > startIdx)
+        try
         {
-            var jsonStr = jsonText.Substring(startIdx, endIdx - startIdx + 1);
-            using (JsonDocument doc = JsonDocument.Parse(jsonStr))
+            // Find JSON array in the text
+            var startIdx = jsonText.IndexOf('[');
+            var endIdx = jsonText.LastIndexOf(']');
+
+            if (startIdx >= 0 && endIdx > startIdx)
             {
-                var root = doc.RootElement;
-                if (root.ValueKind == JsonValueKind.Array)
+                var jsonStr = jsonText.Substring(startIdx, endIdx - startIdx + 1);
+                using (JsonDocument doc = JsonDocument.Parse(jsonStr))
                 {
-                    foreach (var item in root.EnumerateArray())
+                    var root = doc.RootElement;
+                    if (root.ValueKind == JsonValueKind.Array)
                     {
-                        if (item.ValueKind == JsonValueKind.String)
+                        foreach (var item in root.EnumerateArray())
                         {
-                            result.Add(item.GetString() ?? "");
+                            if (item.ValueKind == JsonValueKind.String)
+                            {
+                                var task = item.GetString();
+                                if (!string.IsNullOrWhiteSpace(task) && task.Length <= 75)
+                                {
+                                    result.Add(task);
+                                    // Stop at 10 subtasks max
+                                    if (result.Count >= 10)
+                                        break;
+                                }
+                            }
                         }
                     }
                 }
             }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error parsing JSON array: {ex.Message}");
         }
 
         return result;
