@@ -11,6 +11,7 @@ public interface IUserService
     System.Threading.Tasks.Task<User> CreateAsync(User user);
     System.Threading.Tasks.Task<User> UpdateAsync(User user);
     System.Threading.Tasks.Task DeleteAsync(int id);
+    System.Threading.Tasks.Task<User?> LoginAsync(string email, string password);
 }
 
 public class UserService : IUserService
@@ -55,5 +56,15 @@ public class UserService : IUserService
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
         }
+    }
+
+    public async System.Threading.Tasks.Task<User?> LoginAsync(string email, string password)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        if (user != null && user.Password == password)
+        {
+            return user;
+        }
+        return null;
     }
 }
