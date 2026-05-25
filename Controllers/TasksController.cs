@@ -62,7 +62,7 @@ public class TasksController : ControllerBase
     }
 
     [HttpPost("{taskId}/generate-subtasks")]
-    public async System.Threading.Tasks.Task<ActionResult<List<TaskSubItem>>> GenerateSubtasks(int taskId)
+    public async System.Threading.Tasks.Task<ActionResult> GenerateSubtasks(int taskId)
     {
         var task = await _taskService.GetByIdAsync(taskId);
         if (task == null) return NotFound();
@@ -70,7 +70,7 @@ public class TasksController : ControllerBase
         try
         {
             var subtasks = await _aiService.GenerateSubtasksAsync(task.Title, task.Description);
-            var createdSubItems = new List<TaskSubItem>();
+            var createdSubItems = new List<object>();
 
             for (int i = 0; i < subtasks.Count; i++)
             {
@@ -83,7 +83,7 @@ public class TasksController : ControllerBase
                     CreatedAt = DateTime.UtcNow
                 };
                 var created = await _subItemService.CreateAsync(subItem);
-                createdSubItems.Add(created);
+                createdSubItems.Add(new { created.Id, created.TaskId, created.Title, created.IsDone, created.OrderIndex, created.CreatedAt });
             }
 
             return Ok(createdSubItems);
