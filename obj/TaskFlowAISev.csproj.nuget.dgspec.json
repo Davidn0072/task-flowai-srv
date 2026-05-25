@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\44\\DEV\\CS\\Gen\\MyProj\\TaskFlowAI\\TaskFlowAISrv\\TaskFlowAISev.csproj": {}
+    "C:\\44\\DEV\\CS\\Gen\\MyProj\\TaskFlowAI\\TaskFlowAISRV\\TaskFlowAISev.csproj": {}
   },
   "projects": {
-    "C:\\44\\DEV\\CS\\Gen\\MyProj\\TaskFlowAI\\TaskFlowAISrv\\TaskFlowAISev.csproj": {
+    "C:\\44\\DEV\\CS\\Gen\\MyProj\\TaskFlowAI\\TaskFlowAISRV\\TaskFlowAISev.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\44\\DEV\\CS\\Gen\\MyProj\\TaskFlowAI\\TaskFlowAISrv\\TaskFlowAISev.csproj",
+        "projectUniqueName": "C:\\44\\DEV\\CS\\Gen\\MyProj\\TaskFlowAI\\TaskFlowAISRV\\TaskFlowAISev.csproj",
         "projectName": "TaskFlowAISev",
-        "projectPath": "C:\\44\\DEV\\CS\\Gen\\MyProj\\TaskFlowAI\\TaskFlowAISrv\\TaskFlowAISev.csproj",
+        "projectPath": "C:\\44\\DEV\\CS\\Gen\\MyProj\\TaskFlowAI\\TaskFlowAISRV\\TaskFlowAISev.csproj",
         "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-        "outputPath": "C:\\44\\DEV\\CS\\Gen\\MyProj\\TaskFlowAI\\TaskFlowAISrv\\obj\\",
+        "outputPath": "C:\\44\\DEV\\CS\\Gen\\MyProj\\TaskFlowAI\\TaskFlowAISRV\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

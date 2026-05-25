@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskFlowAISrv.Models;
 using TaskFlowAISrv.Services;
@@ -6,6 +7,7 @@ namespace TaskFlowAISrv.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[AllowAnonymous]
 public class AuthController : ControllerBase
 {
     private readonly IUserService _userService;
