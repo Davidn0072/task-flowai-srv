@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace TaskFlowAISrv.Models;
 
 public class TaskSubItem
@@ -9,5 +11,6 @@ public class TaskSubItem
     public int? OrderIndex { get; set; }
     public DateTime CreatedAt { get; set; }
 
+    [JsonIgnore]
     public TaskItem? Task { get; set; }
 }

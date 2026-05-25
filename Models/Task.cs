@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace TaskFlowAISrv.Models;
 
 public class TaskItem
@@ -13,4 +15,7 @@ public class TaskItem
 
     public User? User { get; set; }
     public ICollection<TaskSubItem> SubItems { get; set; } = [];
+
+    [NotMapped]
+    public int SubItemsCount => SubItems?.Count ?? 0;
 }

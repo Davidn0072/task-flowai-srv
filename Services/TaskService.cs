@@ -25,12 +25,18 @@ public class TaskService : ITaskService
 
     public async System.Threading.Tasks.Task<List<TaskItem>> GetAllAsync()
     {
-        return await _context.TaskItems.Include(t => t.User).ToListAsync();
+        return await _context.TaskItems
+            .Include(t => t.User)
+            .Include(t => t.SubItems)
+            .ToListAsync();
     }
 
     public async System.Threading.Tasks.Task<TaskItem?> GetByIdAsync(int id)
     {
-        return await _context.TaskItems.Include(t => t.User).FirstOrDefaultAsync(t => t.Id == id);
+        return await _context.TaskItems
+            .Include(t => t.User)
+            .Include(t => t.SubItems)
+            .FirstOrDefaultAsync(t => t.Id == id);
     }
 
     public async System.Threading.Tasks.Task<List<TaskItem>> GetByUserIdAsync(int userId)
