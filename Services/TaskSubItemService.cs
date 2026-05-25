@@ -46,9 +46,17 @@ public class TaskSubItemService : ITaskSubItemService
 
     public async System.Threading.Tasks.Task<TaskSubItem> UpdateAsync(TaskSubItem subItem)
     {
-        _context.TaskSubItems.Update(subItem);
+        var existing = await _context.TaskSubItems.FindAsync(subItem.Id);
+        if (existing == null)
+        {
+            return subItem;
+        }
+
+        existing.Title = subItem.Title;
+        existing.IsDone = subItem.IsDone;
+        existing.OrderIndex = subItem.OrderIndex;
         await _context.SaveChangesAsync();
-        return subItem;
+        return existing;
     }
 
     public async System.Threading.Tasks.Task DeleteAsync(int id)

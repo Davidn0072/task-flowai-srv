@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "jAfROT829Tg=",
+  "dgSpecHash": "zPFn+Cv1Nb8=",
   "success": true,
-  "projectFilePath": "C:\\44\\DEV\\CS\\Gen\\MyProj\\TaskFlowAI\\TaskFlowAISRV\\TaskFlowAISev.csproj",
+  "projectFilePath": "C:\\44\\DEV\\CS\\Gen\\MyProj\\TaskFlowAI\\TaskFlowAISrv\\TaskFlowAISev.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\USER\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\USER\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\9.0.0\\microsoft.aspnetcore.authentication.jwtbearer.9.0.0.nupkg.sha512",

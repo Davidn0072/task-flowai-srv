@@ -57,8 +57,17 @@ public class TaskService : ITaskService
 
     public async System.Threading.Tasks.Task<TaskItem> UpdateAsync(TaskItem task)
     {
-        _context.TaskItems.Update(task);
-        await _context.SaveChangesAsync();
+        var existingTask = await _context.TaskItems.FindAsync(task.Id);
+        if (existingTask != null)
+        {
+            existingTask.Title = task.Title;
+            existingTask.Description = task.Description;
+            existingTask.Status = task.Status;
+            existingTask.Priority = task.Priority;
+            existingTask.DueDate = task.DueDate;
+            await _context.SaveChangesAsync();
+            return existingTask;
+        }
         return task;
     }
 

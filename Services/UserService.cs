@@ -47,9 +47,17 @@ public class UserService : IUserService
 
     public async System.Threading.Tasks.Task<User> UpdateAsync(User user)
     {
-        _context.Users.Update(user);
+        var existingUser = await _context.Users.FindAsync(user.Id);
+        if (existingUser == null)
+        {
+            return user;
+        }
+
+        existingUser.Username = user.Username;
+        existingUser.Email = user.Email;
+        existingUser.Password = user.Password;
         await _context.SaveChangesAsync();
-        return user;
+        return existingUser;
     }
 
     public async System.Threading.Tasks.Task DeleteAsync(int id)
