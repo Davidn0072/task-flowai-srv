@@ -42,6 +42,11 @@ app.db
 .env
 .env.local
 
+# App settings with secrets (use appsettings.example.json as template)
+appsettings.json
+appsettings.Development.json
+appsettings.Production.json
+
 # NuGet Packages
 *.nupkg
 *.snupkg
