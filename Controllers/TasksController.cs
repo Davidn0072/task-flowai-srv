@@ -43,6 +43,14 @@ public class TasksController : ControllerBase
         return await _taskService.GetByUserIdAsync(userId);
     }
 
+    [HttpGet("search")]
+    public async System.Threading.Tasks.Task<ActionResult<List<TaskItem>>> Search([FromQuery] string q)
+    {
+        if (string.IsNullOrWhiteSpace(q))
+            return await _taskService.GetAllAsync();
+        return await _taskService.SearchAsync(q);
+    }
+
     [HttpPost]
     public async System.Threading.Tasks.Task<ActionResult<TaskItem>> Create(TaskItem task)
     {
