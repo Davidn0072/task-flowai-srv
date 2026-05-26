@@ -70,7 +70,8 @@ Output format example:
                 {
                     new { role = "user", content = prompt }
                 },
-                stream = false
+                stream = false,
+                max_tokens = 400
             };
 
             var jsonContent = JsonSerializer.Serialize(request);
