@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using TaskFlowAISrv.Models;
 using TaskFlowAISrv.Services;
+using System.Linq;
 
 namespace TaskFlowAISrv.Controllers;
 
@@ -13,13 +14,15 @@ public class TasksController : ControllerBase
     private readonly ITaskService _taskService;
     private readonly ITaskSubItemService _subItemService;
     private readonly IAIService _aiService;
+    private readonly IUserService _userService;
     private readonly ILogger<TasksController> _logger;
 
-    public TasksController(ITaskService taskService, ITaskSubItemService subItemService, IAIService aiService, ILogger<TasksController> logger)
+    public TasksController(ITaskService taskService, ITaskSubItemService subItemService, IAIService aiService, IUserService userService, ILogger<TasksController> logger)
     {
         _taskService = taskService;
         _subItemService = subItemService;
         _aiService = aiService;
+        _userService = userService;
         _logger = logger;
     }
 
@@ -71,6 +74,29 @@ public class TasksController : ControllerBase
     {
         await _taskService.DeleteAsync(id);
         return NoContent();
+    }
+
+    [HttpPost("ai-search")]
+    public async System.Threading.Tasks.Task<ActionResult> AiSearch([FromBody] AiSearchRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Query))
+            return BadRequest(new { error = "Query is required" });
+
+        try
+        {
+            var users = await _userService.GetAllAsync();
+            var usernames = users.Select(u => u.Username).ToList();
+
+            var filter = await _aiService.ParseSearchQueryAsync(request.Query, usernames);
+            var tasks = await _taskService.FilterAsync(filter);
+
+            return Ok(new { tasks, parsedFilter = filter });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"[AI SEARCH] Error: {ex.Message}");
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [HttpPost("{taskId}/generate-subtasks")]
