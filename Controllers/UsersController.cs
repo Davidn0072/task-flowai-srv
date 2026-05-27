@@ -33,17 +33,19 @@ public class UsersController : ControllerBase
 
     [HttpPost]
     [AllowAnonymous]
-    public async Task<ActionResult<User>> Create(User user)
+    public async Task<ActionResult<User>> Create(UserSaveRequest request)
     {
-        return CreatedAtAction(nameof(GetById), new { id = user.Id },
-            await _userService.CreateAsync(user));
+        var result = await _userService.CreateAsync(request);
+        if (!result.IsValid) return BadRequest(result.Errors);
+        return CreatedAtAction(nameof(GetById), new { id = result.SavedUser!.Id }, result.SavedUser);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, User user)
+    public async Task<IActionResult> Update(int id, UserSaveRequest request)
     {
-        if (id != user.Id) return BadRequest();
-        await _userService.UpdateAsync(user);
+        if (id != request.User.Id) return BadRequest();
+        var result = await _userService.UpdateAsync(request);
+        if (!result.IsValid) return BadRequest(result.Errors);
         return NoContent();
     }
 
