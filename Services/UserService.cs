@@ -100,10 +100,10 @@ public class UserService : IUserService
         if (!IsEmailValid(user.Email))
             result.Errors.Add("Invalid email address.");
 
-        if (await _context.Users.AnyAsync(u => u.Username == user.Username && u.Id != user.Id))
+        if (await _context.Users.AnyAsync(u => u.Username.ToLower() == user.Username.ToLower() && u.Id != user.Id))
             result.Errors.Add("Username already exists.");
 
-        if (await _context.Users.AnyAsync(u => u.Email == user.Email && u.Id != user.Id))
+        if (await _context.Users.AnyAsync(u => u.Email.ToLower() == user.Email.ToLower() && u.Id != user.Id))
             result.Errors.Add("Email already exists.");
 
         if (isUpdate)
